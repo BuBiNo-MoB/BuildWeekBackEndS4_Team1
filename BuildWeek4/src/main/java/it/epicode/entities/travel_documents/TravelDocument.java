@@ -1,4 +1,6 @@
-package it.epicode.entities;
+package it.epicode.entities.travel_documents;
+
+import it.epicode.entities.BaseEntity;
 
 public abstract class TravelDocument extends BaseEntity {
     private boolean valid;

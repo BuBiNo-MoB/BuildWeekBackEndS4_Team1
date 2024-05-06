@@ -1,5 +1,7 @@
 package it.epicode.entities;
 
+import it.epicode.entities.travel_documents.Subscription;
+
 public class User extends BaseEntity{
     private String name;
     private String last_name;

@@ -32,4 +32,9 @@ public class BaseEntity {
     public void setInsertedAt(Date insertedAt) {
         this.insertedAt = insertedAt;
     }
+
+    @Override
+    public String toString() {
+        return "BaseEntity{" + "id=" + id + ", insertedAt=" + insertedAt + '}';
+    }
 }

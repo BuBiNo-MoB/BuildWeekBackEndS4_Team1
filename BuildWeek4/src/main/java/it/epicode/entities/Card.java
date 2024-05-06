@@ -1,8 +1,10 @@
 package it.epicode.entities;
 
+import it.epicode.entities.travel_documents.Subscription;
+
 import java.time.LocalDate;
 
-public class Card extends BaseEntity{
+public class Card extends BaseEntity {
     private LocalDate expiration_date;
     //onetoone mappedby
     User user;

@@ -1,8 +1,10 @@
-package it.epicode.entities;
+package it.epicode.entities.travel_documents;
 
+import it.epicode.entities.Card;
+import it.epicode.entities.User;
 import it.epicode.enums.Frequency;
 
-public class Subscription extends TravelDocument{
+public class Subscription extends TravelDocument {
     Frequency frequency;
 
     //OneToMany
