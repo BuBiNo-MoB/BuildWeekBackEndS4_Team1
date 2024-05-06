@@ -19,6 +19,6 @@ public abstract class TravelDocument extends BaseEntity {
 
     @Override
     public String toString() {
-        return "TravelDocument{" + "valid=" + valid + '}';
+        return "TravelDocument{" + super.toString() +"valid:" + valid + '}';
     }
 }

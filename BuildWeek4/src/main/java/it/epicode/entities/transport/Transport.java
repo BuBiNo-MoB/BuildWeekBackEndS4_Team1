@@ -13,7 +13,7 @@ public abstract class Transport extends BaseEntity {
     public Transport(int capacity) {
         this.capacity = capacity;
         this.inService = true;
-        this.inServiceSince = LocalDateTime.now();
+        this.inServiceSince = LocalDateTime.now(); //VA BENE COSI OPPURE FARE LOCALEDATE SOLAMENTE?
         this.underMaintenanceSince = null;
     }
 
@@ -51,6 +51,6 @@ public abstract class Transport extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Transport{" + "Id:"+ getId() + " Created At:" + getInsertedAt() + " capacity:" + capacity + ", inService:" + inService + ", inServiceSince:" + inServiceSince + ", underMaintenanceSince:" + underMaintenanceSince + '}';
+        return "Transport{" + super.toString() + " capacity:" + capacity + ", inService:" + inService + ", inServiceSince:" + inServiceSince + ", underMaintenanceSince:" + underMaintenanceSince + '}';
     }
 }

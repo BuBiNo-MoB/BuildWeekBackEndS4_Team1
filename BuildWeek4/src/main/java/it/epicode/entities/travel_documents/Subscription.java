@@ -4,20 +4,31 @@ import it.epicode.entities.Card;
 import it.epicode.entities.User;
 import it.epicode.enums.Frequency;
 
+import java.time.LocalDate;
+
 public class Subscription extends TravelDocument {
-    Frequency frequency;
+    private Frequency frequency;
 
-    //OneToMany
-    private User user;
+    private LocalDate emission_date;
 
-    //ManyToOne
+    private LocalDate expiration_date;
+
+    //GESTIRE MEGLIO LE RELAZIONI TRA SUBSCRIPTION USER E CARD
+    //ONE TO ONE
     private Card card;
 
     public Subscription() {}
 
-    public Subscription(Frequency frequency) {
+    public Subscription(Frequency frequency, Card card) {
         super();
+        this.emission_date = LocalDate.now();
         this.frequency = frequency;
+        if (frequency == Frequency.MONTHLY) {
+        this.expiration_date = this.emission_date.plusDays(30);
+        }else {
+        this.expiration_date = this.emission_date.plusDays(7);
+        }
+        this.card = card;
     }
 
     public Frequency getFrequency() {
@@ -28,8 +39,16 @@ public class Subscription extends TravelDocument {
         this.frequency = frequency;
     }
 
+
+    @Override
+    public boolean isValid() {
+        //CONTROLLARE SE FUNZIONA PER DAVVERO
+        super.setValid(!(this.expiration_date.isAfter(this.emission_date)));
+        return super.isValid();
+    }
+
     @Override
     public String toString() {
-        return "Subscription{" + "Id:"+ getId() + " Created At:" + getInsertedAt() + " Valid:" + isValid() + " Frequency:" + frequency +"}";
+        return "Subscription{" + super.toString() + " Frequency:" + frequency +"}";
     }
 }

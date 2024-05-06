@@ -35,6 +35,6 @@ public class BaseEntity {
 
     @Override
     public String toString() {
-        return "BaseEntity{" + "id=" + id + ", insertedAt=" + insertedAt + '}';
+        return "BaseEntity{" + "id:" + id + ", insertedAt:" + insertedAt + '}';
     }
 }

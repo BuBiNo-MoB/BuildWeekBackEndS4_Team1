@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class Travel extends BaseEntity {
     // UN VIAGGIO è FATTO DA UN MEZZO SU UNA TRATTA SPECIFICA
-    // UN MEZZO PUO FARE TANTI VIAGGI QUINDI TANIT VIAGGI POSSONO ESSERE FATTI DA UN MEZZO
+    // UN MEZZO PUO FARE TANTI VIAGGI QUINDI TANTI VIAGGI POSSONO ESSERE FATTI DA UN MEZZO
         @ManyToOne
         @JoinColumn(name = "transport_id")
         private Transport transport;
