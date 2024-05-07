@@ -6,16 +6,15 @@ import it.epicode.entities.constants.Tables;
 import it.epicode.entities.travel_documents.Subscription;
 import it.epicode.entities.travel_documents.Ticket;
 import it.epicode.enums.Frequency;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = Tables.Columns.DISCRIMINATOR, discriminatorType = DiscriminatorType.CHAR)
+@DiscriminatorValue("TravelDocumentsManager")
 public abstract class TravelDocumentsManager extends BaseEntity {
     private static final Logger log = LoggerFactory.getLogger(TravelDocumentsManager.class);
     private int issuedTickets;

@@ -1,11 +1,13 @@
 package it.epicode.entities.transport;
 
 import it.epicode.entities.constants.Tables;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = Tables.Names.TRAM)
+@DiscriminatorValue(Tables.Discriminators.TRAM)
 public class Tram extends Transport {
 
     public Tram() {

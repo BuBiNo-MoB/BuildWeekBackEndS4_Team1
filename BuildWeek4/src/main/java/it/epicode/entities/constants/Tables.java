@@ -23,8 +23,12 @@ public class Tables {
     }
 
     public static class Discriminators {
-        public static final String BOOKS = "0";
-        public static final String MAGAZINES = "1";
+        public static final String TICKET = "TI";
+        public static final String SUBSCRIPTION = "S";
+        public static final String AUTHORIZED_RETAILER = "A";
+        public static final String VENDING_MACHINE = "V";
+        public static final String BUS = "B";
+        public static final String TRAM = "T";
     }
 
     public static class Capacity {

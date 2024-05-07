@@ -2,11 +2,13 @@ package it.epicode.entities.transport;
 
 
 import it.epicode.entities.constants.Tables;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = Tables.Names.BUS)
+@DiscriminatorValue(Tables.Discriminators.BUS)
 public class Bus extends Transport {
 
     public Bus() {

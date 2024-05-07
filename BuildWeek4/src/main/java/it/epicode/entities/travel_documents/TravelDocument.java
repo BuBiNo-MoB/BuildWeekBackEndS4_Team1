@@ -1,13 +1,14 @@
 package it.epicode.entities.travel_documents;
 
 import it.epicode.entities.BaseEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
+import it.epicode.entities.constants.Tables;
+import jakarta.persistence.*;
 
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = Tables.Columns.DISCRIMINATOR, discriminatorType = DiscriminatorType.CHAR)
+@DiscriminatorValue("TravelDocument")
 public abstract class TravelDocument extends BaseEntity {
     private boolean valid;
 

@@ -24,6 +24,7 @@ public abstract class JpaDao<T> implements Dao<T> {
         log.debug("Type is {}", type);
     }
 
+
     @Override
     public T save(T e) {
         try {
@@ -38,42 +39,6 @@ public abstract class JpaDao<T> implements Dao<T> {
             }
             log.error("Exception in addItem()", ex);
             throw ex;
-        }
-    }
-
-
-    //SCRIVERE LA QUERY COSI: "SELECT t FROM Classe t WHERE t.id = :id"
-    @Override
-    public Optional<T> getById(String query, Class<T> entityType, long id) {
-        try {
-            TypedQuery<T> typedQuery = em.createQuery(query, entityType)
-                    .setParameter("id", id);
-            T result = typedQuery.getSingleResult();
-            return Optional.ofNullable(result);
-        } catch (NoResultException ex) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public void deleteById(String query, Class<T> entityType, long id) {
-        try {
-            var t = em.getTransaction();
-            t.begin();
-            var toRemove = this.getById( query, entityType, id);
-            toRemove.ifPresentOrElse(
-                    item -> {
-                        try {
-                            em.remove(toRemove.get());
-                            t.commit();
-                            } catch (NoSuchElementException ex) {
-                            log.error("NoSuchElementException in deleteById():", ex);
-                        }
-                    },
-                    () -> log.warn("Nessun elemento trovato con id: {}", id)
-            );
-        } catch (Exception ex){
-            log.error("Exception in removeItemByISBN()", ex);
         }
     }
 

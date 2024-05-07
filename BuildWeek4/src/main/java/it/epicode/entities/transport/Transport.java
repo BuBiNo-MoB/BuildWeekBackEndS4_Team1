@@ -1,6 +1,7 @@
 package it.epicode.entities.transport;
 
 import it.epicode.entities.BaseEntity;
+import it.epicode.entities.constants.Tables;
 import it.epicode.entities.travel_documents.Ticket;
 import jakarta.persistence.*;
 
@@ -11,6 +12,8 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = Tables.Columns.DISCRIMINATOR, discriminatorType = DiscriminatorType.CHAR)
+@DiscriminatorValue("Transport")
 public abstract class Transport extends BaseEntity {
     private int capacity;
     private boolean inService;

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = Tables.Names.SUBSCRIPTION)
+@DiscriminatorValue(Tables.Discriminators.SUBSCRIPTION)
 @NamedQuery(name="issuedSusbscriptionInThisPeriod", query="SELECT s FROM Subscription s WHERE s.insertedAt BETWEEN :startDate AND :endDate")
 public class Subscription extends TravelDocument {
     private Frequency frequency;
