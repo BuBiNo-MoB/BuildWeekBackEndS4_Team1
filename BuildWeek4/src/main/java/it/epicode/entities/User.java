@@ -1,14 +1,17 @@
 package it.epicode.entities;
 
-import it.epicode.entities.travel_documents.Subscription;
+import it.epicode.entities.constants.Tables;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = Tables.Names.USER)
 public class User extends BaseEntity{
     private String name;
     private String last_name;
-    //OneToOne
+
+    @OneToOne(mappedBy = "user")
     private Card card;
-    //ManytoOne
-    private Subscription subscription;
 
     public User(String name, String last_name) {
         this.name = name;

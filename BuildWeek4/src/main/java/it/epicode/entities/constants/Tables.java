@@ -2,9 +2,20 @@ package it.epicode.entities.constants;
 
 public class Tables {
     public static class Names {
-        public static final String LIBRARY_BASE = "library";
-        public static final String BOOKS = "books";
-        public static final String MAGAZINES = "magazines";
+        public static final String USER = "user";
+        public static final String CARD = "card";
+        public static final String TRAVEL_DOCUMENT_MANAGER = "travel_document_manager";
+        public static final String VENDING_MACHINE = "vending_machine";
+        public static final String AUTHORIZED_RETAILER = "authorized_retailer";
+        public static final String SUBSCRIPTION = "subscription";
+        public static final String TICKET = "ticket";
+        public static final String TRAVEL_DOCUMENT = "travel_document";
+        public static final String TRANSPORT = "transport";
+        public static final String BUS = "bus";
+        public static final String TRAM = "tram";
+        public static final String PERIOD = "period";
+        public static final String JOURNEY = "journey";
+        public static final String TRAVEL = "travel";
     }
 
     public static class Columns {

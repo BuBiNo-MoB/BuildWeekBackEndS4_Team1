@@ -2,19 +2,22 @@ package it.epicode.entities.travel_documents;
 
 import it.epicode.entities.Card;
 import it.epicode.entities.User;
+import it.epicode.entities.constants.Tables;
 import it.epicode.enums.Frequency;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+@Entity
+@Table(name = Tables.Names.SUBSCRIPTION)
+@NamedQuery(name="issuedSusbscriptionInThisPeriod", query="SELECT s FROM Subscription s WHERE s.insertedAt BETWEEN :startDate AND :endDate")
 public class Subscription extends TravelDocument {
     private Frequency frequency;
-
     private LocalDate emission_date;
-
     private LocalDate expiration_date;
 
-    //GESTIRE MEGLIO LE RELAZIONI TRA SUBSCRIPTION USER E CARD
-    //ONE TO ONE
+    @OneToOne
+    @JoinColumn(name = "card_id" )
     private Card card;
 
     public Subscription() {}

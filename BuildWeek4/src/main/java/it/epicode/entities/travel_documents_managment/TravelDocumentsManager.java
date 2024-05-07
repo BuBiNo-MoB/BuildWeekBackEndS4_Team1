@@ -2,15 +2,21 @@ package it.epicode.entities.travel_documents_managment;
 
 import it.epicode.entities.BaseEntity;
 import it.epicode.entities.Card;
+import it.epicode.entities.constants.Tables;
 import it.epicode.entities.travel_documents.Subscription;
 import it.epicode.entities.travel_documents.Ticket;
 import it.epicode.enums.Frequency;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
 
-public class TravelDocumentsManager extends BaseEntity {
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class TravelDocumentsManager extends BaseEntity {
     private static final Logger log = LoggerFactory.getLogger(TravelDocumentsManager.class);
     private int issuedTickets;
     private int issuedSubscription;
@@ -25,8 +31,9 @@ public class TravelDocumentsManager extends BaseEntity {
         issuedTickets++;
         log.info("Tickets succesfully issued. Actually issued Tickets {} ", this.getIssuedTickets() );
     }
+
     public void issueSubscription(Frequency frequency, Card card) {
-        if (!card.getExpiration_date().isAfter(LocalDate.now())){
+        if (card.isValid()){
             Subscription subscription = new Subscription(frequency, card);
             issuedSubscription++;
             log.info("Subscription succesfully issued. Actually issued Subscription {} ", this.getIssuedSubscription() );

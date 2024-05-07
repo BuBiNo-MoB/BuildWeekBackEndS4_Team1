@@ -1,11 +1,16 @@
 package it.epicode.entities.transport;
 
 import it.epicode.entities.BaseEntity;
+import it.epicode.entities.constants.Tables;
 import it.epicode.enums.Localities;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@Entity
+@Table(name = Tables.Names.JOURNEY)
 public class Journey extends BaseEntity {
     private Localities departure;
     private Localities arrival;

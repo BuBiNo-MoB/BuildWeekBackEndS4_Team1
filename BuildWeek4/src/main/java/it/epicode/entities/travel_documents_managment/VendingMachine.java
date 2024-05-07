@@ -1,18 +1,20 @@
 package it.epicode.entities.travel_documents_managment;
 
-import it.epicode.entities.BaseEntity;
 import it.epicode.entities.Card;
-import it.epicode.entities.travel_documents.Subscription;
-import it.epicode.entities.travel_documents.Ticket;
+import it.epicode.entities.constants.Tables;
 import it.epicode.enums.Frequency;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TicketMachine extends TravelDocumentsManager {
+@Entity
+@Table(name = Tables.Names.VENDING_MACHINE)
+public class VendingMachine extends TravelDocumentsManager {
     private static final Logger log = LoggerFactory.getLogger(TravelDocumentsManager.class);
     private boolean active;
 
-    public TicketMachine() {
+    public VendingMachine() {
         this.active = true;
     }
 

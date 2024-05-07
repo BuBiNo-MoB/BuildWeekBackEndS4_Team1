@@ -1,7 +1,13 @@
 package it.epicode.entities.travel_documents;
 
 import it.epicode.entities.BaseEntity;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 
+
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class TravelDocument extends BaseEntity {
     private boolean valid;
 

@@ -1,11 +1,12 @@
 package it.epicode.entities.transport;
 
 import it.epicode.entities.constants.Tables;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name = Tables.Names.TRAM)
 public class Tram extends Transport {
-
-    //INSERIRE GESTIONE DEI PERIODI DI SERVIZIO O MANUTENZIONE
-    //INSERIRE RELAZIONE CON IN BIGLIETTI
 
     public Tram() {
         super(Tables.Capacity.TRAM_CAPACITY);
