@@ -15,6 +15,10 @@ public class TravelDocumentsManager extends BaseEntity {
     private int issuedTickets;
     private int issuedSubscription;
 
+    public TravelDocumentsManager() {
+        this.issuedTickets = 0;
+        this.issuedSubscription = 0;
+    }
 
     public void issueTickets() {
         Ticket ticket = new Ticket();

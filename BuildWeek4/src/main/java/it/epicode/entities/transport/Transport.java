@@ -1,6 +1,7 @@
 package it.epicode.entities.transport;
 
 import it.epicode.entities.BaseEntity;
+import it.epicode.entities.travel_documents.Ticket;
 
 import java.time.LocalDateTime;
 
@@ -9,12 +10,22 @@ public abstract class Transport extends BaseEntity {
     private boolean inService;
     private LocalDateTime inServiceSince;
     protected LocalDateTime underMaintenanceSince;
+    private int validatedTickets;
+
+    public Transport() {
+    }
 
     public Transport(int capacity) {
         this.capacity = capacity;
         this.inService = true;
         this.inServiceSince = LocalDateTime.now(); //VA BENE COSI OPPURE FARE LOCALEDATE SOLAMENTE?
         this.underMaintenanceSince = null;
+        this.validatedTickets = 0;
+    }
+
+    public void vaidateTicket(Ticket ticket){
+        ticket.setValid(false);
+        this.validatedTickets ++;
     }
 
     public int getCapacity() {
