@@ -1,6 +1,6 @@
 package it.epicode;
 
-import it.epicode.dao.JpaTicketDao;
+import it.epicode.dao.implementation.JpaTicketDao;
 import it.epicode.entities.transport.Bus;
 
 import it.epicode.entities.transport.Journey;
@@ -51,6 +51,9 @@ public class Main {
         {
             Ticket ticket1  = new Ticket();
             ticket.save(ticket1);
+            var founded = ticket.getById("SELECT t FROM Ticket t WHERE t.id = :id", Ticket.class, 1);
+            log.info("founded element: {}", founded);
+            ticket.deleteById("SELECT t FROM Ticket t WHERE t.id = :id", Ticket.class, 1);
         } catch (Exception e) {
             log.error("Exception in main()", e);
         }

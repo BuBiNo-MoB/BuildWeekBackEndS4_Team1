@@ -1,4 +1,4 @@
-package it.epicode.dao;
+package it.epicode.dao.interfaces;
 
 import java.util.Optional;
 
@@ -16,12 +16,8 @@ public interface Dao<T> extends AutoCloseable{
      * @param id chiave dell'entità da recuperare.
      * @return l'entità richiesta, se trovata, oppure un {@code Optional} vuoto.
      */
-    Optional<T> getById(long id);
+    Optional<T> getById(String query, Class<T> entityType, long id);
 
-    /**
-     * Elimina un'entità.
-     *
-     * @param e l'entità da eliminare.
-     */
-    void delete(T e);
+
+    void deleteById(String query, Class<T> entityType, long id);
 }
