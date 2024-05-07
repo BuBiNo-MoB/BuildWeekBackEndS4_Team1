@@ -7,7 +7,7 @@ import jakarta.persistence.NoResultException;
 
 import java.util.Optional;
 
-public class JpaTravelDocumentDao extends JpaDao<TravelDocument> implements Dao<TravelDocument> {
+public class JpaTravelDocumentDao extends JpaDao<TravelDocument> implements Dao<TravelDocument>, TravelDocumentDao {
     public JpaTravelDocumentDao() {super(TravelDocument.class);}
 
 }
