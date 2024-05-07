@@ -13,8 +13,7 @@ import org.slf4j.LoggerFactory;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = Tables.Columns.DISCRIMINATOR, discriminatorType = DiscriminatorType.CHAR)
-@DiscriminatorValue("TravelDocumentsManager")
+@DiscriminatorColumn(name = Tables.Columns.DISCRIMINATOR, discriminatorType = DiscriminatorType.STRING)
 public abstract class TravelDocumentsManager extends BaseEntity {
     private static final Logger log = LoggerFactory.getLogger(TravelDocumentsManager.class);
     private int issuedTickets;

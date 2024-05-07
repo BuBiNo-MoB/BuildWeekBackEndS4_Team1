@@ -23,7 +23,7 @@ public class Tables {
     }
 
     public static class Discriminators {
-        public static final String TICKET = "TI";
+        public static final String TICKET = "T";
         public static final String SUBSCRIPTION = "S";
         public static final String AUTHORIZED_RETAILER = "A";
         public static final String VENDING_MACHINE = "V";
