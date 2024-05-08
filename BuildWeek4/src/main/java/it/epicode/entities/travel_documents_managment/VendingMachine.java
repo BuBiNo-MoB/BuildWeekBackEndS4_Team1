@@ -20,23 +20,6 @@ public class VendingMachine extends TravelDocumentsManager {
         this.active = true;
     }
 
-    @Override
-    public void issueTickets() {
-        if (active) {
-            super.issueTickets();
-        }
-        log.warn("TicketMachine is not active, cannot issue ticket");
-    }
-    @Override
-    public void issueSubscription(Frequency frequency, Card card) {
-        if (active) {
-            super.issueSubscription(frequency, card);
-        }
-        log.warn("TicketMachine is not active, cannot issue subscription");
-    }
-
-
-
     public boolean isActive() {
         return active;
     }

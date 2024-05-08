@@ -10,50 +10,22 @@ import jakarta.persistence.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = Tables.Columns.DISCRIMINATOR, discriminatorType = DiscriminatorType.STRING)
 public abstract class TravelDocumentsManager extends BaseEntity {
     private static final Logger log = LoggerFactory.getLogger(TravelDocumentsManager.class);
-    private int issuedTickets;
-    private int issuedSubscription;
+
+    @OneToMany(mappedBy = "TravelDocumentsManager")
+    private List<Ticket> tickets = new ArrayList<>();
 
     public TravelDocumentsManager() {
-        this.issuedTickets = 0;
-        this.issuedSubscription = 0;
     }
 
-    public void issueTickets() {
-        Ticket ticket = new Ticket();
-        issuedTickets++;
-        log.info("Tickets succesfully issued. Actually issued Tickets {} ", this.getIssuedTickets() );
-    }
-
-    public void issueSubscription(Frequency frequency, Card card) {
-        if (card.isValid()){
-            Subscription subscription = new Subscription(frequency, card);
-            issuedSubscription++;
-            log.info("Subscription succesfully issued. Actually issued Subscription {} ", this.getIssuedSubscription() );
-        }
-            log.warn("Unfortunately your card is expired");
-    }
-
-    public int getIssuedTickets() {
-        return issuedTickets;
-    }
-
-    public void setIssuedTickets(int issuedTickets) {
-        this.issuedTickets = issuedTickets;
-    }
-
-    public int getIssuedSubscription() {
-        return issuedSubscription;
-    }
-
-    public void setIssuedSubscription(int issuedSubscription) {
-        this.issuedSubscription = issuedSubscription;
-    }
 
     @Override
     public String toString() {

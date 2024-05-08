@@ -2,12 +2,9 @@ package it.epicode.dao.implementation;
 
 import it.epicode.dao.interfaces.Dao;
 import it.epicode.dao.interfaces.TravelDocumentDao;
-import it.epicode.entities.travel_documents.TravelDocument;
-import jakarta.persistence.NoResultException;
+import it.epicode.entities.travel_documents.TravelDocumento;
 
-import java.util.Optional;
-
-public class JpaTravelDocumentDao extends JpaDao<TravelDocument> implements Dao<TravelDocument>, TravelDocumentDao {
-    public JpaTravelDocumentDao() {super(TravelDocument.class);}
+public class JpaTravelDocumentDao extends JpaDao<TravelDocumento> implements Dao<TravelDocumento>, TravelDocumentDao {
+    public JpaTravelDocumentDao() {super(TravelDocumento.class);}
 
 }

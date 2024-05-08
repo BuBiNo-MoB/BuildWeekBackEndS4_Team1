@@ -2,7 +2,6 @@ package it.epicode.entities.transport;
 
 import it.epicode.entities.BaseEntity;
 import it.epicode.entities.constants.Tables;
-import it.epicode.entities.travel_documents.Ticket;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -15,14 +14,15 @@ import java.util.List;
 @DiscriminatorColumn(name = Tables.Columns.DISCRIMINATOR, discriminatorType = DiscriminatorType.STRING)
 public abstract class Transport extends BaseEntity {
     private int capacity;
-    private boolean inService;
     private LocalDateTime inServiceSince;
     protected LocalDateTime underMaintenanceSince;
-    private int validatedTickets;
+
     @ElementCollection
     List<Period> inServicePeriod = new ArrayList<>();
     @ElementCollection
     List<Period> underMaintenancePeriod  = new ArrayList<>();
+    @ElementCollection
+    List<ValidateTicket> ValidatedTicket  = new ArrayList<>();
 
 
     public Transport() {
@@ -30,30 +30,10 @@ public abstract class Transport extends BaseEntity {
 
     public Transport(int capacity) {
         this.capacity = capacity;
-        this.inService = true;
         this.inServiceSince = LocalDateTime.now(); //VA BENE COSI OPPURE FARE LOCALEDATE SOLAMENTE?
         this.underMaintenanceSince = null;
-        this.validatedTickets = 0;
     }
 
-    public void validateTicket(Ticket ticket){
-        ticket.setValid(false);
-        this.validatedTickets ++;
-    }
-
-    public void underMaintenanceStart() {
-        inService = false;
-        Period inService = new Period(this.getInServiceSince(), LocalDateTime.now());
-        underMaintenanceSince = LocalDateTime.now();
-        inServiceSince = null;
-   }
-
-    public void underMaintenanceEnd() {
-        inService = true;
-        Period inService = new Period(this.getUnderMaintenanceSince(), LocalDateTime.now());
-        underMaintenanceSince = null;
-        inServiceSince = LocalDateTime.now();
-    }
 
     public int getCapacity() {
         return capacity;
@@ -63,13 +43,6 @@ public abstract class Transport extends BaseEntity {
         this.capacity = capacity;
     }
 
-    public boolean isInService() {
-        return inService;
-    }
-
-    public void setInService(boolean inService) {
-        this.inService = inService;
-    }
 
     public LocalDateTime getInServiceSince() {
         return inServiceSince;
@@ -89,6 +62,6 @@ public abstract class Transport extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Transport{" + super.toString() + " capacity:" + capacity + ", inService:" + inService + ", inServiceSince:" + inServiceSince + ", underMaintenanceSince:" + underMaintenanceSince + '}';
+        return "Transport{" + super.toString() + " capacity:" + capacity + ", inServiceSince:" + inServiceSince + ", underMaintenanceSince:" + underMaintenanceSince + '}';
     }
 }

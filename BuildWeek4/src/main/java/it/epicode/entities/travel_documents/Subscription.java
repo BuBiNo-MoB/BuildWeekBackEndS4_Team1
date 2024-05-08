@@ -1,8 +1,8 @@
 package it.epicode.entities.travel_documents;
 
 import it.epicode.entities.Card;
-import it.epicode.entities.User;
 import it.epicode.entities.constants.Tables;
+import it.epicode.entities.travel_documents_managment.TravelDocumentsManager;
 import it.epicode.enums.Frequency;
 import jakarta.persistence.*;
 
@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = Tables.Names.SUBSCRIPTION)
 @DiscriminatorValue(Tables.Discriminators.SUBSCRIPTION)
-@NamedQuery(name="issuedSusbscriptionInThisPeriod", query="SELECT s FROM Subscription s WHERE s.insertedAt BETWEEN :startDate AND :endDate")
-public class Subscription extends TravelDocument {
+//@NamedQuery(name="issuedSusbscriptionInThisPeriod", query="SELECT s FROM Subscription s WHERE s.insertedAt BETWEEN :startDate AND :endDate")
+public class Subscription extends TravelDocumento {
     private Frequency frequency;
     private LocalDate emission_date;
     private LocalDate expiration_date;
@@ -23,8 +23,8 @@ public class Subscription extends TravelDocument {
 
     public Subscription() {}
 
-    public Subscription(Frequency frequency, Card card) {
-        super();
+    public Subscription(Frequency frequency, Card card, TravelDocumentsManager emittedBy) {
+        super(emittedBy);
         this.emission_date = LocalDate.now();
         this.frequency = frequency;
         if (frequency == Frequency.MONTHLY) {
