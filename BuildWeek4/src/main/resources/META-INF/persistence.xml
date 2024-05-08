@@ -10,7 +10,7 @@
             <property name="jakarta.persistence.jdbc.user"
                       value="postgres" />
             <property name="jakarta.persistence.jdbc.password"
-                      value="Postgres" />
+                      value="password" />
             <property name="jakarta.persistence.jdbc.driver"
                       value="org.postgresql.Driver" />
             <property name="hibernate.default_schema" value="public" />

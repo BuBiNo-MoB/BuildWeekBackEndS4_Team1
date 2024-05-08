@@ -56,6 +56,7 @@ public class Main {
 //        System.out.println(journey1);
 //        System.out.println(travel);
 
+
         int count= 50;
         try (var travelDocument = new JpaTravelDocumentDao(); // dao per gli eventi
             ) // dao per le locations
