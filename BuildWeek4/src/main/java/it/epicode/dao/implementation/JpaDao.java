@@ -63,7 +63,7 @@ public abstract class JpaDao<T> implements Dao<T> {
             log.info("eseguito");
         } catch (Exception ex) {
             trans.rollback();
-            log.error("Exception in delete(), rolling back transaction", e);
+            log.error("Exception in delete(), rolling back transaction", ex);
         }
     }
 

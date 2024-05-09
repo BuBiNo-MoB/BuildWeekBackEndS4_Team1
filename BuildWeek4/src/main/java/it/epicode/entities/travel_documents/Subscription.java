@@ -36,6 +36,30 @@ public class Subscription extends TravelDocumento {
         this.card = card;
     }
 
+    public LocalDate getEmission_date() {
+        return emission_date;
+    }
+
+    public void setEmission_date(LocalDate emission_date) {
+        this.emission_date = emission_date;
+    }
+
+    public LocalDate getExpiration_date() {
+        return expiration_date;
+    }
+
+    public void setExpiration_date(LocalDate expiration_date) {
+        this.expiration_date = expiration_date;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
+    }
+
     public Frequency getFrequency() {
         return frequency;
     }

@@ -5,6 +5,8 @@ import it.epicode.entities.constants.Tables;
 import it.epicode.entities.travel_documents.TravelDocumento;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = Tables.Columns.DISCRIMINATOR, discriminatorType = DiscriminatorType.STRING)

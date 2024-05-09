@@ -9,10 +9,12 @@ import jakarta.persistence.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = Tables.Names.VENDING_MACHINE)
 @DiscriminatorValue(Tables.Discriminators.VENDING_MACHINE)
-public class VendingMachine extends TravelDocumentsManager {
+public class VendingMachine extends TravelDocumentsManager implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(TravelDocumentsManager.class);
     private boolean active;
 

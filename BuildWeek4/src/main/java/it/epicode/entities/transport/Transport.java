@@ -3,6 +3,7 @@ package it.epicode.entities.transport;
 import it.epicode.entities.BaseEntity;
 import it.epicode.entities.constants.Tables;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

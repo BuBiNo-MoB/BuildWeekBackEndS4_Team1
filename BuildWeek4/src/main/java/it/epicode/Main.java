@@ -61,22 +61,36 @@ public class Main {
     }
 
     private static List<Subscription> randomSubscription(int count, List<TravelDocumentsManager> travelDocumentsManagerList, List<Card> cardList) {
-        List<Card> usedCard = new ArrayList<>();
-        return LongStream.range(1, count + 1)
-                .mapToObj(n ->
-                {
-                    Card randomCard;
-                    do {
-                        randomCard = cardList.get(rnd.nextInt(cardList.size())); // Scegli un utente casuale dalla lista
-                    } while (usedCard.contains(randomCard) && randomCard.getExpiration_date().isBefore(LocalDate.now()));// Continua finché la card scelta non è stat gia selezionata e non è scaduta
-                    usedCard.add(randomCard);
+        List<Subscription> subscriptions = new ArrayList<>();
+        List<Card> availableCards = new ArrayList<>(cardList);
 
-                    return new Subscription(
-                            Frequency.values()[rnd.nextInt(2)],
-                            randomCard,
-                            travelDocumentsManagerList.get(rnd.nextInt(travelDocumentsManagerList.size())));
-                })
-                .toList();
+        for (int i = 0; i < count; i++) {
+            Card randomCard = null;
+            do {
+                if (availableCards.isEmpty()) {
+                    // Se non ci sono più carte disponibili, interrompi il ciclo
+                    break;
+                }
+                randomCard = availableCards.get(rnd.nextInt(availableCards.size()));
+            } while (randomCard.getExpiration_date().isBefore(LocalDate.now()));
+
+            if (randomCard.getExpiration_date().isBefore(LocalDate.now())) {
+                // Se la carta è scaduta, rimuovila dalle carte disponibili e passa alla prossima iterazione
+                availableCards.remove(randomCard);
+                continue;
+            }
+
+            // Rimuovi la carta selezionata dalle carte disponibili
+            availableCards.remove(randomCard);
+
+            // Scegli casualmente un gestore di documenti di viaggio
+            TravelDocumentsManager randomManager = travelDocumentsManagerList.get(rnd.nextInt(travelDocumentsManagerList.size()));
+
+            // Aggiungi l'abbonamento alla lista
+            subscriptions.add(new Subscription(Frequency.values()[rnd.nextInt(2)], randomCard, randomManager));
+        }
+
+        return subscriptions;
     }
 
     private static List<VendingMachine> randomVendingMachine(int count){
@@ -115,15 +129,40 @@ public class Main {
                     return new Journey(
                             start,
                             end,
-                            LocalTime.of(rnd.nextInt(23), rnd.nextInt(59), rnd.nextInt(59))
+                            LocalDateTime.of(2024,05, 9, rnd.nextInt(23), rnd.nextInt(59), rnd.nextInt(59))
                     );
                 })
                 .toList();
     }
 
 
+    private static List<ValidateTicket> randomValidateTicket(int count, List<Transport> transportList, List<Ticket> ticketList){
+        List<Ticket> usedTicket = new ArrayList<>();
+        return LongStream.range(1, count + 1)
+                .mapToObj(n ->
+                {
+                    Ticket randomTicket;
+                    do {
+                        randomTicket = ticketList.get(rnd.nextInt(ticketList.size())); // Scegli un utente casuale dalla lista
+                    } while (usedTicket.contains(randomTicket));// Continua finché l'utente scelto è già stato assegnato
+                    usedTicket.add(randomTicket);
+                    return new ValidateTicket(transportList.get(rnd.nextInt(transportList.size())), randomTicket );
 
+                })
+                .toList();
+    }
 
+    private static List<Travel> randomTravel(int count, List<Transport> transportList, List<Journey> journeyList ){
+        List<Ticket> usedTicket = new ArrayList<>();
+        return LongStream.range(1, count + 1)
+                .mapToObj(n ->
+                {
+                    var randomJourney = journeyList.get(rnd.nextInt(journeyList.size()));
+                    return new Travel(transportList.get(rnd.nextInt(transportList.size())), randomJourney, randomJourney.getAverage_time().plusMinutes(30)   );
+
+                })
+                .toList();
+    }
 
     public static void main(String[] args) {
 
@@ -135,7 +174,8 @@ public class Main {
              var cardDao = new JpaCardDao();
              var transportDao = new JpaTransportDao();
              var journeyDao = new JpaJourneyDao();
-             //var validateTicketDao = new JpaValidateTicketDao();
+             var validateTicketDao = new JpaValidateTicketDao();
+             var travelDao = new JpaTravelDao();
              )
 
         {
@@ -199,9 +239,9 @@ public class Main {
 
 
             //CREO UNA LISTA COMUNE DI TRANSPORT MACHINE E AUTHORIZED RETAILER
-//            List<Transport> TransportList = new ArrayList<>();
-//            TransportList.addAll(busList);
-//            TransportList.addAll(tramList);
+            List<Transport> transportList = new ArrayList<>();
+            transportList.addAll(busList);
+            transportList.addAll(tramList);
             Optional<Transport> foundedElementr = transportDao.getById(5);
 
             foundedElementr.ifPresentOrElse(
@@ -213,12 +253,11 @@ public class Main {
                         transportDao.underMaintenanceEnd(item);
                         log.info("questo è l'oggetto finita la manutenzione {}", item);
                         log.info("Elimino l'oggetto");
-                        transportDao.delete(item);
+                                transportDao.delete(item);
                         transportDao.getById(5).ifPresentOrElse(
-                                i -> log.warn("C'è stato un errore l'elemento dovrebbe essere stato eliminato!"),
+                                i -> log.warn("L'elemento dovrebbe essere sttaoe liminato"),
                                 () -> log.info("L'elemento non c'è perchè è stato eliminato")
                         );
-                        //log.info("questo è l'oggetto in manutenzione {}", item);
                     },
                     () -> log.warn("L'elemento è stato eliminato")
             );
@@ -229,16 +268,24 @@ public class Main {
             //LA SALVO
             journeyList.forEach(journeyDao::save);
 
-//            log.info("Creo {} validateTicket a caso", count);
-//            //CREO UNA LISTA DI JOURNEY
-//            List<ValidateTicket> validateTicket = randomValidateTicket(count, TransportList, ticketListV);
-//            //LA SALVO
-//            validateTicket.forEach(validateTicketDao::save);
+            cardDao.renew(cardList.get(1));
 
 
-            //var founded = ticket.getById("SELECT t FROM Ticket t WHERE t.id = :id", Ticket.class, 1);
-            //log.info("founded element: {}", founded);
-            //ticket.deleteById("SELECT t FROM Ticket t WHERE t.id = :id", Ticket.class, 1);
+            log.info("Creo {} validateTicket a caso", count);
+            //CREO UNA LISTA DI VALIDATETICKET
+            List<ValidateTicket> validateTicket = randomValidateTicket(count, transportList, ticketListV);
+            //LA SALVO
+            validateTicket.forEach(validateTicketDao::save);
+
+            log.info("Creo {} Travel a caso", count);
+            //CREO UNA LISTA DI TRAVEL
+            List<Travel> travel = randomTravel(count, transportList,journeyList);
+            //LA SALVO
+            travel.forEach(travelDao::save);
+
+
+            //VEDERE SE NEL TRAVEL CI SONO SOLO I MEZZI IN SERVIZIO
+
         } catch (Exception e) {
             log.error("Exception in main()", e);
         }
