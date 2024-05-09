@@ -20,7 +20,7 @@ import java.util.List;
 public abstract class TravelDocumentsManager extends BaseEntity {
     private static final Logger log = LoggerFactory.getLogger(TravelDocumentsManager.class);
 
-    @OneToMany(mappedBy = "TravelDocumentsManager")
+    @OneToMany(mappedBy = "emittedBy")
     private List<Ticket> tickets = new ArrayList<>();
 
     public TravelDocumentsManager() {

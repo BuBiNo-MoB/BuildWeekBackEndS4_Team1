@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = Tables.Names.TRAVEL)
-//SELECT COUNT PER L ULTIMA RIGA
 public class Travel extends BaseEntity {
     // UN VIAGGIO è FATTO DA UN MEZZO SU UNA TRATTA SPECIFICA
     // UN MEZZO PUO FARE TANTI VIAGGI QUINDI TANTI VIAGGI POSSONO ESSERE FATTI DA UN MEZZO

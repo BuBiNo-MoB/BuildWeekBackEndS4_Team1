@@ -4,6 +4,8 @@ import it.epicode.entities.BaseEntity;
 import it.epicode.entities.constants.Tables;
 import it.epicode.enums.Localities;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
@@ -12,9 +14,14 @@ import java.time.LocalTime;
 @Entity
 @Table(name = Tables.Names.JOURNEY)
 public class Journey extends BaseEntity {
+    @Enumerated(EnumType.STRING)
     private Localities departure;
+
+    @Enumerated(EnumType.STRING)
     private Localities arrival;
+
     private LocalTime average_time;
+
 
     public Journey(){}
 

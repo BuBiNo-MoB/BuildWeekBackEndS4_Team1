@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @DiscriminatorValue(Tables.Discriminators.SUBSCRIPTION)
 //@NamedQuery(name="issuedSusbscriptionInThisPeriod", query="SELECT s FROM Subscription s WHERE s.insertedAt BETWEEN :startDate AND :endDate")
 public class Subscription extends TravelDocumento {
+    @Enumerated(EnumType.STRING)
     private Frequency frequency;
     private LocalDate emission_date;
     private LocalDate expiration_date;
@@ -43,13 +44,6 @@ public class Subscription extends TravelDocumento {
         this.frequency = frequency;
     }
 
-
-    @Override
-    public boolean isValid() {
-        //CONTROLLARE SE FUNZIONA PER DAVVERO
-        super.setValid(!(this.expiration_date.isAfter(this.emission_date)));
-        return super.isValid();
-    }
 
     @Override
     public String toString() {

@@ -6,4 +6,5 @@ import it.epicode.entities.Card;
 
 public class JpaCardDao extends JpaDao<Card> implements Dao<Card>, CardDao {
     public JpaCardDao() {super(Card.class);}
+
 }

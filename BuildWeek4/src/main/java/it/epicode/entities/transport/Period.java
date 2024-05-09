@@ -3,19 +3,21 @@ package it.epicode.entities.transport;
 import it.epicode.entities.BaseEntity;
 import it.epicode.entities.constants.Tables;
 import it.epicode.enums.Status;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Embeddable
-public class Period {
+@Entity
+@Table(name = Tables.Names.PERIOD)
+public class Period extends BaseEntity {
     private LocalDateTime start_date;
     private LocalDateTime end_date;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "transport_id")
     private Transport transport;
+
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public Period(LocalDateTime start_date, LocalDateTime end_date, Transport transport, Status status) {
@@ -39,6 +41,22 @@ public class Period {
 
     public void setEnd_date(LocalDateTime end_date) {
         this.end_date = end_date;
+    }
+
+    public Transport getTransport() {
+        return transport;
+    }
+
+    public void setTransport(Transport transport) {
+        this.transport = transport;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override
