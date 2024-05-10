@@ -4,6 +4,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @MappedSuperclass
@@ -12,7 +13,7 @@ public class BaseEntity {
     @Id
     @GeneratedValue
     private long id;
-    private Date insertedAt = new Date();
+    private LocalDate insertedAt = LocalDate.now();
 
     public BaseEntity() {
     }
@@ -21,7 +22,7 @@ public class BaseEntity {
         return id;
     }
 
-    public Date getInsertedAt() {
+    public LocalDate getInsertedAt() {
         return insertedAt;
     }
 
@@ -29,7 +30,7 @@ public class BaseEntity {
         this.id = id;
     }
 
-    public void setInsertedAt(Date insertedAt) {
+    public void setInsertedAt(LocalDate insertedAt) {
         this.insertedAt = insertedAt;
     }
 

@@ -19,6 +19,9 @@ public abstract class Transport extends BaseEntity implements Serializable {
     private LocalDateTime inServiceSince;
     protected LocalDateTime underMaintenanceSince;
 
+    @OneToOne(mappedBy = "transport")
+    private ValidateTicket validateTicket;
+
     public Transport() {
     }
 

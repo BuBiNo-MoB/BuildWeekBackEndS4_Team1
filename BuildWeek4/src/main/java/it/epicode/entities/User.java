@@ -13,6 +13,8 @@ public class User extends BaseEntity{
     @OneToOne(mappedBy = "user")
     private Card card;
 
+    public User(){}
+    
     public User(String name, String last_name) {
         this.name = name;
         this.last_name = last_name;

@@ -38,8 +38,8 @@ public class Card extends BaseEntity {
         return expiration_date;
     }
 
-    public void setExpiration_date() {
-        this.expiration_date = getExpiration_date().plusDays(365);
+    public void setExpiration_date(LocalDate expiration_date) {
+        this.expiration_date = expiration_date;
     }
 
     public boolean isValid() {

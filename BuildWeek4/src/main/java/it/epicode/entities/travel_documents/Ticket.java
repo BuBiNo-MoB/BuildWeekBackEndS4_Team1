@@ -9,11 +9,17 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = Tables.Names.TICKET)
 @DiscriminatorValue(Tables.Discriminators.TICKET)
-@NamedQuery(name="issuedTicketsInThisPeriod", query="SELECT t FROM Ticket t WHERE t.insertedAt BETWEEN :startDate AND :endDate")
+@NamedQuery(
+        name = "SEARCH_TICKET_EMITTED_BY_TRAVEL_DOCUMENTS_MANAGER",
+        query = "SELECT count(t) FROM Ticket t " +
+                "JOIN t.emittedBy m " +
+                "WHERE m.id = :id AND t.insertedAt BETWEEN :startDate AND :endDate"
+)
 public class Ticket extends TravelDocumento {
 
     public Ticket() {
     }
+
 
     public Ticket(TravelDocumentsManager emittedBy) {
         super(emittedBy);

@@ -13,16 +13,14 @@ import it.epicode.entities.travel_documents_managment.TravelDocumentsManager;
 import it.epicode.entities.travel_documents_managment.VendingMachine;
 import it.epicode.enums.Frequency;
 import it.epicode.enums.Localities;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.LongStream;
 
 public class Main {
@@ -54,43 +52,41 @@ public class Main {
 
     private static List<Ticket> randomTicket(int count, List<TravelDocumentsManager> travelDocumentsManagerList) {
         return LongStream.range(1, count + 1)
-                .mapToObj(n -> new Ticket(
-                        travelDocumentsManagerList.get(rnd.nextInt(travelDocumentsManagerList.size()))
-                ))
-                .toList();
+                .mapToObj(n -> {
+                    //VERIFICO CHE LA MACHINE O L AUTHOR SIA VALIDO
+                    var travelDocumentManager = travelDocumentsManagerList.get(rnd.nextInt(travelDocumentsManagerList.size()));
+                    if (travelDocumentManager instanceof VendingMachine && ((VendingMachine) travelDocumentManager).isActive() || travelDocumentManager instanceof  AuthorizedRetailer) {
+                        return new Ticket(travelDocumentManager);
+                    } else {
+                        log.warn("Ticket cannot be issued to inactive vending machine");
+                        return null; // Ritorno null per indicare che non viene creato alcun biglietto
+                    }
+                })
+                .filter(Objects::nonNull) // Rimuove eventuali biglietti null dalla lista
+                .toList(); // Converte lo stream in una lista
     }
 
     private static List<Subscription> randomSubscription(int count, List<TravelDocumentsManager> travelDocumentsManagerList, List<Card> cardList) {
-        List<Subscription> subscriptions = new ArrayList<>();
-        List<Card> availableCards = new ArrayList<>(cardList);
-
-        for (int i = 0; i < count; i++) {
-            Card randomCard = null;
-            do {
-                if (availableCards.isEmpty()) {
-                    // Se non ci sono più carte disponibili, interrompi il ciclo
-                    break;
-                }
-                randomCard = availableCards.get(rnd.nextInt(availableCards.size()));
-            } while (randomCard.getExpiration_date().isBefore(LocalDate.now()));
-
-            if (randomCard.getExpiration_date().isBefore(LocalDate.now())) {
-                // Se la carta è scaduta, rimuovila dalle carte disponibili e passa alla prossima iterazione
-                availableCards.remove(randomCard);
-                continue;
-            }
-
-            // Rimuovi la carta selezionata dalle carte disponibili
-            availableCards.remove(randomCard);
-
-            // Scegli casualmente un gestore di documenti di viaggio
-            TravelDocumentsManager randomManager = travelDocumentsManagerList.get(rnd.nextInt(travelDocumentsManagerList.size()));
-
-            // Aggiungi l'abbonamento alla lista
-            subscriptions.add(new Subscription(Frequency.values()[rnd.nextInt(2)], randomCard, randomManager));
-        }
-
-        return subscriptions;
+        List<Card> usedCard = new ArrayList<>();
+        return LongStream.range(1, count + 1)
+                .mapToObj(n ->
+                {
+                    Card randomCard;
+                    var travelDocumentManager = travelDocumentsManagerList.get(rnd.nextInt(travelDocumentsManagerList.size()));
+                    do {
+                        randomCard = cardList.get(rnd.nextInt(cardList.size()));
+                    } while (usedCard.contains(randomCard) && randomCard.getExpiration_date().isAfter(LocalDate.now()));
+                    usedCard.add(randomCard);
+                    //VERIFICO CHE LA MACHINE O L AUTHOR SIA VALIDO
+                    if (travelDocumentManager instanceof VendingMachine && ((VendingMachine) travelDocumentManager).isActive() || travelDocumentManager instanceof  AuthorizedRetailer) {
+                        return new Subscription(Frequency.values()[rnd.nextInt(2)], randomCard, travelDocumentManager);
+                    }else {
+                        log.warn("Subscription cannot be issued to inactive vending machine");
+                        return null; // Ritorno null per indicare che non viene creato alcuna subscription
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     private static List<VendingMachine> randomVendingMachine(int count){
@@ -129,7 +125,7 @@ public class Main {
                     return new Journey(
                             start,
                             end,
-                            LocalDateTime.of(2024,05, 9, rnd.nextInt(23), rnd.nextInt(59), rnd.nextInt(59))
+                            LocalTime.of(rnd.nextInt(23), rnd.nextInt(59), rnd.nextInt(59))
                     );
                 })
                 .toList();
@@ -138,29 +134,47 @@ public class Main {
 
     private static List<ValidateTicket> randomValidateTicket(int count, List<Transport> transportList, List<Ticket> ticketList){
         List<Ticket> usedTicket = new ArrayList<>();
+        List<Transport> usedTransport = new ArrayList<>();
         return LongStream.range(1, count + 1)
                 .mapToObj(n ->
                 {
                     Ticket randomTicket;
-                    do {
-                        randomTicket = ticketList.get(rnd.nextInt(ticketList.size())); // Scegli un utente casuale dalla lista
-                    } while (usedTicket.contains(randomTicket));// Continua finché l'utente scelto è già stato assegnato
-                    usedTicket.add(randomTicket);
-                    return new ValidateTicket(transportList.get(rnd.nextInt(transportList.size())), randomTicket );
+                    Transport randomTransport;
 
+                    do {
+                        randomTicket = ticketList.get(rnd.nextInt(ticketList.size())); // Scegli un ticket casuale dalla lista
+                    } while (usedTicket.contains(randomTicket)); // Continua finché il ticket scelto è già stato assegnato
+
+                    do {
+                        randomTransport = transportList.get(rnd.nextInt(transportList.size())); // Scegli un mezzo casuale dalla lista
+                    } while (usedTransport.contains(randomTransport)); // Continua finché il mezzo scelto è già stato assegnato
+
+                    usedTicket.add(randomTicket);
+                    usedTransport.add(randomTransport);
+
+                    return new ValidateTicket(randomTransport, randomTicket);
                 })
                 .toList();
     }
 
     private static List<Travel> randomTravel(int count, List<Transport> transportList, List<Journey> journeyList ){
         List<Ticket> usedTicket = new ArrayList<>();
+        LocalDate now = LocalDate.now();
         return LongStream.range(1, count + 1)
                 .mapToObj(n ->
                 {
                     var randomJourney = journeyList.get(rnd.nextInt(journeyList.size()));
-                    return new Travel(transportList.get(rnd.nextInt(transportList.size())), randomJourney, randomJourney.getAverage_time().plusMinutes(30)   );
-
-                })
+                    var randomValidTransport = transportList.get(rnd.nextInt(transportList.size()));
+                    LocalTime time = randomJourney.getAverage_time().plusMinutes(30);
+                    //SE LA DATA DI INIZIO MANUTENZIONE è NULL SIGNIFICA CHE è IN SERVIZIO
+                    if (randomValidTransport.getUnderMaintenanceSince() == null) {
+                        return new Travel(randomValidTransport, randomJourney, LocalDateTime.of(now, time));
+                    }else {
+                            log.warn("Subscription cannot be issued to inactive vending machine");
+                            return null; // Ritorno null per indicare che non viene creato alcuna subscription
+                        }
+                    })
+                .filter(Objects::nonNull)
                 .toList();
     }
 
@@ -186,6 +200,9 @@ public class Main {
             //LE SALVO
             TravelDocumentManagerV.forEach(travelDocumentsManagerDao::save);
 
+            var v1 = TravelDocumentManagerV.get(5);
+            v1.setActive(false);
+            travelDocumentsManagerDao.save(v1);
 
             log.info("Creo {} authorizedRetailer a caso", count_TravelDocumentManager);
             //CREO UNA LISTA DI AUTHORIZED RETAILER
@@ -200,10 +217,12 @@ public class Main {
 
 
             log.info("Creo {} ticket a caso", count);
+
             //CREO UNA LISTA DI BIGLIETTI EMESSI DA UNA VENDING MACHINE CASUALE
             List<Ticket> ticketListV = randomTicket(count, TravelDocumentsManagerList);
             //LA SALVO
             ticketListV.forEach(travelDocumentDao::save);
+
 
 
             log.info("Creo {} user a caso", count);
@@ -217,6 +236,7 @@ public class Main {
             List<Card> cardList = randomCard(count, userList);
             //LA SALVO
             cardList.forEach(cardDao::save);
+
 
             log.info("Creo {} subscription a caso", count);
             //CREO UNA LISTA DI SUBSCRIPTION
@@ -237,20 +257,19 @@ public class Main {
             tramList.forEach(transportDao::save);
 
 
-
             //CREO UNA LISTA COMUNE DI TRANSPORT MACHINE E AUTHORIZED RETAILER
             List<Transport> transportList = new ArrayList<>();
             transportList.addAll(busList);
             transportList.addAll(tramList);
-            Optional<Transport> foundedElementr = transportDao.getById(5);
+            Optional<Transport> foundedElement = transportDao.getById(40);
 
-            foundedElementr.ifPresentOrElse(
+            foundedElement.ifPresentOrElse(
                     item -> {
                         log.info("Questo è l'elemento trovato: {}", item);
                         transportDao.underMaintenanceStart(item);
                         log.info("questo è l'oggetto iniziata la manutenzione {}", item);
 
-                        transportDao.underMaintenanceEnd(item);
+                        //transportDao.underMaintenanceEnd(item);
                         log.info("questo è l'oggetto finita la manutenzione {}", item);
                         log.info("Elimino l'oggetto");
                                 transportDao.delete(item);
@@ -284,7 +303,18 @@ public class Main {
             travel.forEach(travelDao::save);
 
 
-            //VEDERE SE NEL TRAVEL CI SONO SOLO I MEZZI IN SERVIZIO
+            //TEST PER CAPIRE UN TARVELDOCUMENTMANAGER QUANTI BIGLIETTI E ABBONAMENTI HA EMESSO IN TOTALE
+            System.out.println(travelDocumentDao.searchAllTravelDocumentsEmittedById(5, LocalDate.of(2019,10,2), LocalDate.of(2025,10,2)));
+            //TEST PER CAPIRE UN TARVELDOCUMENTMANAGER QUANTI BIGLIETTI HA EMESSO IN TOTALE
+            System.out.println(travelDocumentDao.searchTicketEmittedById(5, LocalDate.of(2019,10,2), LocalDate.of(2025,10,2)));
+            //TEST PER CAPIRE UN TARVELDOCUMENTMANAGER QUANTI ABBONAMENTI HA EMESSO IN TOTALE
+            System.out.println(travelDocumentDao.searchSubscriptionEmittedById(5, LocalDate.of(2019,10,2), LocalDate.of(2025,10,2)));
+
+
+
+            //TEST PER VEDERE IL NUMERO DI BIGLIETTI VIDIMATI SU UN PARTICOLARE MEZZO
+            System.out.println(validateTicketDao.searchValidateTicketByTransportId(1));
+            System.out.println(validateTicketDao.searchValidateTicketByDate(LocalDate.of(2019,10,2), LocalDate.of(2025,10,2)));
 
         } catch (Exception e) {
             log.error("Exception in main()", e);

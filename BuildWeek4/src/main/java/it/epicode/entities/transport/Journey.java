@@ -8,6 +8,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -20,12 +21,12 @@ public class Journey extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Localities arrival;
 
-    private LocalDateTime average_time;
+    private LocalTime average_time;
 
 
     public Journey(){}
 
-    public Journey(Localities departure, Localities arrival, LocalDateTime average_time) {
+    public Journey(Localities departure, Localities arrival, LocalTime average_time) {
         this.departure = departure;
         this.arrival = arrival;
         this.average_time = average_time;
@@ -47,11 +48,11 @@ public class Journey extends BaseEntity {
         this.arrival = arrival;
     }
 
-    public LocalDateTime getAverage_time() {
+    public LocalTime getAverage_time() {
         return average_time;
     }
 
-    public void setAverage_time(LocalDateTime average_time) {
+    public void setAverage_time(LocalTime average_time) {
         this.average_time = average_time;
     }
 

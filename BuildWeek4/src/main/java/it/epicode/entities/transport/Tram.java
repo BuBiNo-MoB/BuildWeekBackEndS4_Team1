@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 @DiscriminatorValue(Tables.Discriminators.TRAM)
 public class Tram extends Transport {
 
+
     public Tram() {
         super(Tables.Capacity.TRAM_CAPACITY);
     }

@@ -11,7 +11,12 @@ import java.time.LocalDate;
 @Entity
 @Table(name = Tables.Names.SUBSCRIPTION)
 @DiscriminatorValue(Tables.Discriminators.SUBSCRIPTION)
-//@NamedQuery(name="issuedSusbscriptionInThisPeriod", query="SELECT s FROM Subscription s WHERE s.insertedAt BETWEEN :startDate AND :endDate")
+@NamedQuery(
+        name = "SEARCH_SUBSCRIPTION_EMITTED_BY_TRAVEL_DOCUMENTS_MANAGER",
+        query = "SELECT count(s) FROM Subscription s " +
+                "JOIN s.emittedBy m " +
+                "WHERE m.id = :id AND s.insertedAt BETWEEN :startDate AND :endDate"
+)
 public class Subscription extends TravelDocumento {
     @Enumerated(EnumType.STRING)
     private Frequency frequency;
