@@ -2,15 +2,17 @@ package it.epicode.entities.transport;
 
 import it.epicode.entities.BaseEntity;
 import it.epicode.entities.constants.Tables;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = Tables.Names.TRAVEL)
+@NamedQuery(
+        name = "SEARCH_ALL_JOURNEY_BY_TRANSPORT",
+        query = "SELECT count(t) FROM Travel t " +
+                "WHERE t.transport.id = :id_t AND t.journey.id = :id_j"
+)
 public class Travel extends BaseEntity {
     // UN VIAGGIO è FATTO DA UN MEZZO SU UNA TRATTA SPECIFICA
     // UN MEZZO PUO FARE TANTI VIAGGI QUINDI TANTI VIAGGI POSSONO ESSERE FATTI DA UN MEZZO

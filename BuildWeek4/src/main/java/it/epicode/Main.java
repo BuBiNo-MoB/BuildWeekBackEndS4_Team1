@@ -170,7 +170,7 @@ public class Main {
                     if (randomValidTransport.getUnderMaintenanceSince() == null) {
                         return new Travel(randomValidTransport, randomJourney, LocalDateTime.of(now, time));
                     }else {
-                            log.warn("Subscription cannot be issued to inactive vending machine");
+                            log.warn("Travel cannot be issued due to transport under manteinance");
                             return null; // Ritorno null per indicare che non viene creato alcuna subscription
                         }
                     })
@@ -316,6 +316,9 @@ public class Main {
             System.out.println(validateTicketDao.searchValidateTicketByTransportId(1));
             System.out.println(validateTicketDao.searchValidateTicketByDate(LocalDate.of(2019,10,2), LocalDate.of(2025,10,2)));
 
+
+            //TEST PER VERIFICARE QUANTE VOLTE è STATA PERCORSA UNA TRATTA DA UN MEZZO
+            System.out.println(travelDao.searchAllJourneyByTransport(40,17));
         } catch (Exception e) {
             log.error("Exception in main()", e);
         }
